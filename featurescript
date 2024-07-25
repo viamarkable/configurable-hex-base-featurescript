@@ -1,0 +1,25 @@
+FeatureScript 2411;
+import(path : "onshape/std/common.fs", version : "2411.0");
+
+annotation { "Feature Type Name" : "Configurable Hex Base", "Feature Type Description" : "" }
+const MY_LENGTH_BOUNDS =
+        {
+            (inch) : 0.1,
+            (centimeter) : 0.25
+            
+        } as LengthBoundSpec;
+export const hexBase = defineFeature(function(context is Context, id is Id, definition is map)
+    precondition
+    {   
+        annotation { "Name" : "Base Length" }
+        isLength(definition.length, MY_LENGTH_BOUNDS);
+        
+        annotation { "Name" : "Base Width" }
+        isLength(definition.width, MY_LENGTH_BOUNDS);
+        
+        annotation { "Name" : "Octagon Side Length" }
+        isLength(definition.sideLength, MY_LENGTH_BOUNDS);
+    }
+    {
+        // Define the function's action
+    });
