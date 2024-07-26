@@ -1,24 +1,38 @@
 FeatureScript 2411;
 import(path : "onshape/std/common.fs", version : "2411.0");
 
-annotation { "Feature Type Name" : "Configurable Hex Base", "Feature Type Description" : "" }
-const MY_LENGTH_BOUNDS =
-        {
-            (inch) : 0.1,
-            (centimeter) : 0.25
-            
-        } as LengthBoundSpec;
+const OCTAGON_LENGTH_REC =
+{
+    (inch) : [1, 5, 10]
+}
+
+export enum Excess
+{
+    annotation { "Name" : "Left and Back" }
+    LEFT_AND_BACK,
+    annotation { "Name" : "Right and Back" }
+    RIGHT_AND_BACK,
+    annotation { "Name" : "Left and Front" }
+    LEFT_AND_FRONT,
+    annotation { "Name" : "Right and Back" }
+    RIGHT_AND_FRONT
+}
+
+annotation { "Feature Type Name" : "Configurable Hex Base" }
 export const hexBase = defineFeature(function(context is Context, id is Id, definition is map)
     precondition
     {   
         annotation { "Name" : "Base Length" }
-        isLength(definition.length, MY_LENGTH_BOUNDS);
+        isLength(definition.length, LENGTH_BOUNDS);
         
         annotation { "Name" : "Base Width" }
-        isLength(definition.width, MY_LENGTH_BOUNDS);
+        isLength(definition.width, LENGTH_BOUNDS);
         
-        annotation { "Name" : "Octagon Side Length" }
-        isLength(definition.sideLength, MY_LENGTH_BOUNDS);
+        // annotation { "Name" : "Octagon Side Length" }
+        // isLength(definition.sideLength, LENGTH_BOUNDS);
+        
+        annotation { "Name" : "Excess Material" }
+        definition.excess is Excess;
     }
     {
         // Define the function's action
