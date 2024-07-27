@@ -23,16 +23,16 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
     {
         annotation { "Name" : "Base Length:" }
         isLength(definition.length, MY_SIZE_BOUNDS);
-
+        
         annotation { "Name" : "Base Width:" }
         isLength(definition.width, MY_SIZE_BOUNDS);
-
+        
         annotation { "Name" : "Base Height:" }
         isLength(definition.height, MY_SIZE_BOUNDS);
-
+        
         annotation { "Name" : "Octagon Side Length:" }
         isLength(definition.sideLength, MY_OCTAGON_BOUNDS);
-
+        
         annotation { "Name" : "Excess Material" }
         definition.excess is Excess;
     }
@@ -41,148 +41,155 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         const baseWidth = definition.width;
         const baseHeight = definition.height;
         const octagonLength = definition.sideLength;
-
+        
+        // creates sample patch sketch, finished
         var sampleSketch = newSketchOnPlane(context, id + "sampleSketch", {
                 "sketchPlane" : XY_PLANE
             });
-
-        skLineSegment(sampleSketch, "line1", {
-                    "start" : vector(octagonLength / 2, 0) * inch,
-                    "end" : vector(octagonLength / 2, octagonLength / 2) * inch
-                });
-        skLineSegment(sampleSketch, "line2", {
-                    "start" : vector(0, octagonLength / 2) * inch,
-                    "end" : vector(octagonLength / 2, octagonLength / 2) * inch
-                });
-        skLineSegment(sampleSketch, "line3", {
-                    "start" : vector(octagonLength / 2, octagonLength / 2) * inch,
-                    "end" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch
-                });
-        skLineSegment(sampleSketch, "line4", {
-                    "start" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch,
-                    "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch
-                });
-        skLineSegment(sampleSketch, "line5", {
-                    "start" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch,
-                    "end" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch
-                });
-        skLineSegment(sampleSketch, "line6", {
-                    "start" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch,
-                    "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch
-                });
-        skLineSegment(sampleSketch, "line7", {
-                    "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch,
-                    "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch
-                });
-        skLineSegment(sampleSketch, "line8", {
-                    "start" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch,
-                    "end" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch
-                });
-        skLineSegment(sampleSketch, "line9", {
-                    "start" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch,
-                    "end" : vector(0, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch
-                });
-        skLineSegment(sampleSketch, "line10", {
-                    "start" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch,
-                    "end" : vector(octagonLength / 2, octagonLength * 2 + octagonLength * sqrt(2) * 2) * inch
-                });
-        skLineSegment(sampleSketch, "line11", {
-                    "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch,
-                    "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch
-                });
-        skLineSegment(sampleSketch, "line12", {
-                    "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch,
-                    "end" : vector(octagonLength * 2 + octagonLength * sqrt(2) * 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch
-                });
-        skLineSegment(sampleSketch, "line13", {
-                    "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch,
-                    "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength * 2 + octagonLength * sqrt(2) * 2) * inch
-                });
-        skLineSegment(sampleSketch, "line14", {
-                    "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch,
-                    "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength / 2) * inch
-                });
-        skLineSegment(sampleSketch, "line15", {
-                    "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength / 2) * inch,
-                    "end" : vector(octagonLength * 2 + octagonLength * sqrt(2) * 2, octagonLength / 2) * inch
-                });
-        skLineSegment(sampleSketch, "line16", {
-                    "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength / 2) * inch,
-                    "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, 0) * inch
-                });
-
-        skConstraint(sampleSketch, "constraint1", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line1.end", "localSecond" : "line2.end", "localThird" : "line3.start"
-                });
-        skConstraint(sampleSketch, "constraint2", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line3.end", "localSecond" : "line4.start", "localThird" : "line5.start"
-                });
-        skConstraint(sampleSketch, "constraint3", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line4.end", "localSecond" : "line7.start", "localThird" : "line14.start"
-                });
-        skConstraint(sampleSketch, "constraint4", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line5.end", "localSecond" : "line6.start", "localThird" : "line8.start"
-                });
-        skConstraint(sampleSketch, "constraint5", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line6.end", "localSecond" : "line7.end", "localThird" : "line11.start"
-                });
-        skConstraint(sampleSketch, "constraint6", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line8.end", "localSecond" : "line9.start", " localThird" : "line10.start"
-                });
-        skConstraint(sampleSketch, "constraint7", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line11.end", "localSecond" : "line12.start", "localThird" : "line13.start"
-                });
-        skConstraint(sampleSketch, "constraint8", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line14.end", "localSecond" : "line15.start", "localThird" : "line16.start"
-                });
-
-        skSolve(sampleSketch);
-
+            
+            skLineSegment(sampleSketch, "line1", {
+                        "start" : vector(octagonLength / 2, 0) * inch,
+                        "end" : vector(octagonLength / 2, octagonLength / 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line2", {
+                        "start" : vector(0, octagonLength / 2) * inch,
+                        "end" : vector(octagonLength / 2, octagonLength / 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line3", {
+                        "start" : vector(octagonLength / 2, octagonLength / 2) * inch,
+                        "end" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch
+                    });
+            skLineSegment(sampleSketch, "line4", {
+                        "start" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch,
+                        "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch
+                    });
+            skLineSegment(sampleSketch, "line5", {
+                        "start" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch,
+                        "end" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch
+                    });
+            skLineSegment(sampleSketch, "line6", {
+                        "start" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch,
+                        "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch
+                    });
+            skLineSegment(sampleSketch, "line7", {
+                        "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch,
+                        "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch
+                    });
+            skLineSegment(sampleSketch, "line8", {
+                        "start" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch,
+                        "end" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line9", {
+                        "start" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch,
+                        "end" : vector(0, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line10", {
+                        "start" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch,
+                        "end" : vector(octagonLength / 2, octagonLength * 2 + octagonLength * sqrt(2) * 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line11", {
+                        "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength * 1.5 + octagonLength * sqrt(2)) * inch,
+                        "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line12", {
+                        "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch,
+                        "end" : vector(octagonLength * 2 + octagonLength * sqrt(2) * 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line13", {
+                        "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength * 1.5 + octagonLength * sqrt(2) * 2) * inch,
+                        "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength * 2 + octagonLength * sqrt(2) * 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line14", {
+                        "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch,
+                        "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength / 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line15", {
+                        "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength / 2) * inch,
+                        "end" : vector(octagonLength * 2 + octagonLength * sqrt(2) * 2, octagonLength / 2) * inch
+                    });
+            skLineSegment(sampleSketch, "line16", {
+                        "start" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, octagonLength / 2) * inch,
+                        "end" : vector(octagonLength * 1.5 + octagonLength * sqrt(2) * 2, 0) * inch
+                    });
+            
+            skConstraint(sampleSketch, "constraint1", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line1.end", "localSecond" : "line2.end", "localThird" : "line3.start"
+                    });
+            skConstraint(sampleSketch, "constraint2", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line3.end", "localSecond" : "line4.start", "localThird" : "line5.start"
+                    });
+            skConstraint(sampleSketch, "constraint3", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line4.end", "localSecond" : "line7.start", "localThird" : "line14.start"
+                    });
+            skConstraint(sampleSketch, "constraint4", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line5.end", "localSecond" : "line6.start", "localThird" : "line8.start"
+                    });
+            skConstraint(sampleSketch, "constraint5", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line6.end", "localSecond" : "line7.end", "localThird" : "line11.start"
+                    });
+            skConstraint(sampleSketch, "constraint6", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line8.end", "localSecond" : "line9.start", " localThird" : "line10.start"
+                    });
+            skConstraint(sampleSketch, "constraint7", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line11.end", "localSecond" : "line12.start", "localThird" : "line13.start"
+                    });
+            skConstraint(sampleSketch, "constraint8", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line14.end", "localSecond" : "line15.start", "localThird" : "line16.start"
+                    });
+            
+            skSolve(sampleSketch);
+        
         const sample = (octagonLength * 2 + octagonLength * sqrt(2) * 2) * inch;
         const repeatLength = baseLength / sample;
         const repeatWidth = baseWidth / sample;
-
+        
         const roundedRepeatLength = floor(repeatLength);
         const roundedRepeatWidth = floor(repeatWidth);
-
+        
+        // creates the full base sketch, under review
         var baseSketch = newSketchOnPlane(context, id + "baseSketch", {
                 "sketchPlane" : XY_PLANE
             });
-
-        linearPattern(context, id + "linearPattern1", {
-                    "patternType" : PatternType.PART,
-                    "entities" : qCreatedBy(id + "sampleSketch", EntityType.EDGE),
-                    "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
-                    "distance" : sample,
-                    "instanceCount" : roundedRepeatWidth,
-                    "hasSecondDir" : true,
-                    "directionTwo" : qCreatedBy(newId() + "Top", EntityType.FACE),
-                    "distanceTwo" : sample,
-                    "instanceCountTwo" : roundedRepeatLength
-                });
+            
+            // copies sampleSketch to create the full pattern
+            linearPattern(context, id + "linearPattern1", {
+                        "patternType" : PatternType.PART, // .PART or .FACE ?
+                        "entities" : qSketchRegion(id + "sampleSketch"),
+                        "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
+                        "distance" : sample,
+                        "instanceCount" : roundedRepeatWidth,
+                        "hasSecondDir" : true,
+                        "directionTwo" : qCreatedBy(newId() + "Top", EntityType.FACE),
+                        "distanceTwo" : sample,
+                        "instanceCountTwo" : roundedRepeatLength
+                    });
+            
+            skSolve(baseSketch);
         
+        // creates the excess part sketch, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
                 "sketchPlane" : XY_PLANE
-        });
+            });
+            
+            skRectangle(excessSketch, "baserectangle", {
+                    "firstCorner" : vector(0, 0) * inch,
+                    "secondCorner" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample) * inch
+            });
+            skRectangle(excessSketch, "fullrectangle", {
+                    "firstCorner" : vector(0, 0) * inch,
+                    "secondCorner" : vector(baseWidth, baseLength) * inch
+            });
+            
+            skSolve(excessSketch);
         
-        skRectangle(excessSketch, "baserectangle", {
-                "firstCorner" : vector(0, 0) * inch,
-                "secondCorner" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample) * inch
-        });
-        skRectangle(excessSketch, "fullrectangle", {
-                "firstCorner" : vector(0, 0) * inch,
-                "secondCorner" : vector(baseWidth, baseLength) * inch
-        });
-        
+        // creates extruded excess
         opExtrude(context, id + "extrude1", {
-                "entities" : "baserectangle",
-                "direction" : evOwnerSketchPlane(context, {"entity" : "baserectangle"}).normal,
+                "entities" : qSketchRegion(id + "baserectangle"),
                 "endBound" : BoundingType.BLIND,
                 "endDepth" : baseHeight
         });
         opExtrude(context, id + "extrude2", {
-                "entities" : "fullrectangle",
-                "direction" : evOwnerSketchPlane(context, {"entity" : "fullrectangle"}).normal,
+                "entities" : qSketchRegion(id + "fullrectangle"),
                 "endBound" : BoundingType.BLIND,
                 "endDepth" : baseHeight
         });
@@ -191,6 +198,6 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                 "tools" : "extrude1",
                 "targets" : "extrude2",
                 "operationType" : BooleanOperationType.SUBTRACTION
-        });
-        
+        });    
+            
     });
