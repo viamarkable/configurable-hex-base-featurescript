@@ -1,11 +1,8 @@
 FeatureScript 2411;
 import(path : "onshape/std/common.fs", version : "2411.0");
 
-const OCTAGON_LENGTH_REC =
-{
-    (inch) : [1, 5, 10]
-}
-
+const MY_SIZE_BOUNDS = { (inch) : [0.1, 10, 1000] } as LengthBoundSpec;
+const MY_OCTAGON_BOUNDS = { (inch) : [0.1, 3/8, 10] } as LengthBoundSpec;
 export enum Excess
 {
     annotation { "Name" : "Left and Back" }
@@ -19,21 +16,86 @@ export enum Excess
 }
 
 annotation { "Feature Type Name" : "Configurable Hex Base" }
+
 export const hexBase = defineFeature(function(context is Context, id is Id, definition is map)
     precondition
     {   
-        annotation { "Name" : "Base Length" }
-        isLength(definition.length, LENGTH_BOUNDS);
+        annotation { "Name" : "Base Length:" }
+        isLength(definition.length, MY_SIZE_BOUNDS);
         
-        annotation { "Name" : "Base Width" }
-        isLength(definition.width, LENGTH_BOUNDS);
+        annotation { "Name" : "Base Width:" }
+        isLength(definition.width, MY_SIZE_BOUNDS);
         
-        // annotation { "Name" : "Octagon Side Length" }
-        // isLength(definition.sideLength, LENGTH_BOUNDS);
+        annotation { "Name" : "Base Height:" }
+        isLength(definition.height, MY_SIZE_BOUNDS);
+        
+        annotation { "Name" : "Octagon Side Length:" }
+        isLength(definition.sideLength, MY_OCTAGON_BOUNDS);
         
         annotation { "Name" : "Excess Material" }
         definition.excess is Excess;
     }
     {
-        // Define the function's action
+        const baseLength = definition.length;
+        const baseWidth = definition.width;
+        const baseHeight = definition.height;
+        const octagonLength = definition.sideLength;
+        
+        var sketch1 = newSketchOnPlane(context, id + "sketch1", {
+                "sketchPlane" : XY_PLANE
+        });
+        
+        // skLineSegment(sketch1, "squareLine1", {
+        //         "start" : vector(0, 0) * inch,
+        //         "end" : vector(octagonLength, 0) * inch
+        // });
+        // skLineSegment(sketch1, "squareLine2", {
+        //         "start" : vector(0, 0) * inch,
+        //         "end" : vector(0, octagonLength) * inch
+        // });
+        // skLineSegment(sketch1, "squareLine3", {
+        //         "start" : vector(octagonLength, 0) * inch,
+        //         "end" : vector(octagonLength, octagonLength) * inch
+        // });
+        // skLineSegment(sketch1, "squareLine4", {
+        //         "start" : vector(0, octagonLength) * inch,
+        //         "end" : vector(octagonLength, octagonLength) * inch
+        // });
+        
+        // skConstraint(sketch1, "constraint1", {
+        //         "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "squareLine1.start", "localSecond" : "squareLine2.start"
+        // });
+        
+        skLineSegment(sketch1, "line1", {
+                "start" : vector(octagonLength / 2, 0) * inch,
+                "end" : vector(octagonLength / 2, octagonLength / 2) * inch
+        });
+        skLineSegment(sketch1, "line2", {
+                "start" : vector(0, octagonLength / 2) * inch,
+                "end" : vector(octagonLength / 2, octagonLength / 2) * inch
+        });
+        skLineSegment(sketch1, "line3", {
+                "start" : vector(octagonLength / 2, octagonLength / 2) * inch,
+                "end" : vector(octagonLength / 2 + octagonLength * sqrt(2), octagonLength / 2 + octagonLength * sqrt(2)) * inch
+        });
+        // skLineSegment(sketch1, "line4", {
+        //         "start" : vector(octagonLength + octagonLength * sqrt(2), octagonLength + octagonLength * sqrt(2)) * inch,
+        //         "end" : vector(octagonLength * 2 + octagonLength * sqrt(2), octagonLength + octagonLength * sqrt(2)) * inch
+        // });
+        // skLineSegment(sketch1, "line5", {
+        //         "start" : vector(octagonLength + octagonLength * sqrt(2), octagonLength + octagonLength * sqrt(2)) * inch,
+        //         "end" : vector(octagonLength + octagonLength * sqrt(2), octagonLength * 2 + octagonLength * sqrt(2)) * inch
+        // });
+        // skLineSegment(sketch1, "line6", {
+        //         "start" : vector(octagonLength + octagonLength * sqrt(2), octagonLength * 2 + octagonLength * sqrt(2)) * inch,
+        //         "end" : vector(octagonLength * 2 + octagonLength * sqrt(2), octagonLength * 2 + octagonLength * sqrt(2)) * inch
+        // });
+        // skLineSegment(sketch1, "line7", {
+        //         "start" : vector(octagonLength * octagonLength + octagonLength * sqrt(2), octagonLength + octagonLength * sqrt(2)) * inch,
+        //         "end" : vector(octagonLength * 2 + octagonLength * sqrt(2), octagonLength * 2 + octagonLength * sqrt(2)) * inch
+        // });
+        // skLineSegment(sketch1, "line8", {
+        //         "start" : vector(octagonLength + octagonLength * sqrt(2), octagonLength * 2 + octagonLength * sqrt(2)) * inch,
+        //         "end" : vector(octagonLength, octagonLength * 2 + octagonLength * sqrt(2) * 2) * inch
+        // });
     });
