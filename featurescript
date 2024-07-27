@@ -5,8 +5,7 @@ import(path : "onshape/std/common.fs", version : "2411.0");
 const MY_SIZE_BOUNDS = { (inch) : [0.1, 10, 1000] } as LengthBoundSpec;
 const MY_OCTAGON_BOUNDS = { (inch) : [0.1, 3 / 8, 10] } as LengthBoundSpec;
 
-export enum Excess
-{
+export enum Excess {
     annotation { "Name" : "Left and Back" }
     LEFT_AND_BACK,
     annotation { "Name" : "Right and Back" }
@@ -143,8 +142,8 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         const repeatLength = baseLength / sample;
         const repeatWidth = baseWidth / sample;
 
-        const roundedLength = round(repeatLength);
-        const roundedWidth = round(repeatWidth);
+        const roundedRepeatLength = floor(repeatLength);
+        const roundedRepeatWidth = floor(repeatWidth);
 
         var baseSketch = newSketchOnPlane(context, id + "baseSketch", {
                 "sketchPlane" : XY_PLANE
@@ -155,11 +154,43 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                     "entities" : qCreatedBy(id + "sampleSketch", EntityType.EDGE),
                     "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
                     "distance" : sample,
-                    "instanceCount" : roundedWidth,
+                    "instanceCount" : roundedRepeatWidth,
                     "hasSecondDir" : true,
                     "directionTwo" : qCreatedBy(newId() + "Top", EntityType.FACE),
                     "distanceTwo" : sample,
-                    "instanceCountTwo" : roundedLength
+                    "instanceCountTwo" : roundedRepeatLength
                 });
+        
+        var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
+                "sketchPlane" : XY_PLANE
+        });
+        
+        skRectangle(excessSketch, "baserectangle", {
+                "firstCorner" : vector(0, 0) * inch,
+                "secondCorner" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample) * inch
+        });
+        skRectangle(excessSketch, "fullrectangle", {
+                "firstCorner" : vector(0, 0) * inch,
+                "secondCorner" : vector(baseWidth, baseLength) * inch
+        });
+        
+        opExtrude(context, id + "extrude1", {
+                "entities" : "baserectangle",
+                "direction" : evOwnerSketchPlane(context, {"entity" : "baserectangle"}).normal,
+                "endBound" : BoundingType.BLIND,
+                "endDepth" : baseHeight
+        });
+        opExtrude(context, id + "extrude2", {
+                "entities" : "fullrectangle",
+                "direction" : evOwnerSketchPlane(context, {"entity" : "fullrectangle"}).normal,
+                "endBound" : BoundingType.BLIND,
+                "endDepth" : baseHeight
+        });
+        
+        opBoolean(context, id + "boolean1", {
+                "tools" : "extrude1",
+                "targets" : "extrude2",
+                "operationType" : BooleanOperationType.SUBTRACTION
+        });
         
     });
