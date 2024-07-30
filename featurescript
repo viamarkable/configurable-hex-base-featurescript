@@ -3,8 +3,8 @@ import(path : "onshape/std/geometry.fs", version : "2411.0");
 import(path : "onshape/std/common.fs", version : "2411.0");
 
 const MY_SIZE_BOUNDS = { (inch) : [0.1, 10, 1000] } as LengthBoundSpec;
-const MY_OCTAGON_BOUNDS = { (inch) : [0.1, 3 / 8, 10] } as LengthBoundSpec;
-const MY_STRUT_BOUNDS = { (inch) : [0.1, 0.125, 0.5] } as LengthBoundSpec;
+const MY_OCTAGON_BOUNDS = { (inch) : [0.1, 0.5, 5] } as LengthBoundSpec;
+const MY_STRUT_BOUNDS = { (inch) : [0.05, 0.0625, 0.5] } as LengthBoundSpec;
 
 export enum Excess {
     annotation { "Name" : "Left and Back" }
@@ -29,7 +29,7 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         isLength(definition.width, MY_SIZE_BOUNDS);
         
         annotation { "Name" : "Base Height:" }
-        isLength(definition.height, MY_SIZE_BOUNDS);
+        isLength(definition.height, MY_OCTAGON_BOUNDS);
         
         annotation { "Name" : "Octagon Side Length:" }
         isLength(definition.sideLength, MY_OCTAGON_BOUNDS);
@@ -116,6 +116,7 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                         "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, 0 * octagonLength)
                     });
             
+            // redundant
             // skConstraint(sampleSketch, "constraint1", {
             //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line1.end", "localSecond" : "line2.end", "localThird" : "line3.start"
             //         });
@@ -180,11 +181,20 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         //         "depth" : baseHeight,
         //         // "wallShape" : qCreatedBy(id + "baseSketch", EntityType.BODY),
         //         "wallShape" : qSketchRegion(id + "baseSketch"),
-        //         "thickness1" : strut,
-        //         "thickness2" : strut
+        //         "thickness1" : strut / 2,
+        //         "thickness2" : strut / 2
         // });
         
-        // creates the excess part sketch, finished
+        opExtrude(context, id + "extrude1", {
+                "entities" : sketchEntityQuery(id + "baseSketch", EntityType.EDGE, "baseSketch"),
+                // "direction" : evOwnerSketchPlane(context, {"entity" : sketchEntityQuery(id + "baseSketch", EntityType.EDGE, "baseSketch")}).normal,
+                // "direction" : qCreatedBy(newId() + "Top", EntityType.FACE),
+                "direction" : evOwnerSketchPlane(context, {"entity" : qCreatedBy(newId() + "Top", EntityType.FACE)}).normal,
+                "endBound" : BoundingType.BLIND,
+                "endDepth" : 1 * inch
+        });
+        
+        // creates the excess part, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
                 "sketchPlane" : XY_PLANE
             });
@@ -209,11 +219,13 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                     "corner2" : vector(baseWidth, baseLength, baseHeight)
             });
             
-            opBoolean(context, id + "boolean1", {
+            opBoolean(context, id + "excessBoolean", {
                     "tools" : qCreatedBy(id + "baseCuboid", EntityType.BODY),
                     "targets" : qCreatedBy(id + "fullCuboid", EntityType.BODY),
                     "operationType" : BooleanOperationType.SUBTRACTION
             });
             
             skSolve(excessSketch);
+            
+        // need to boolean everything together
     });
