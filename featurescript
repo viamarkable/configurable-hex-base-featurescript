@@ -4,6 +4,7 @@ import(path : "onshape/std/common.fs", version : "2411.0");
 
 const MY_SIZE_BOUNDS = { (inch) : [0.1, 10, 1000] } as LengthBoundSpec;
 const MY_OCTAGON_BOUNDS = { (inch) : [0.1, 3 / 8, 10] } as LengthBoundSpec;
+const MY_STRUT_BOUNDS = { (inch) : [0.1, 0.125, 0.5] } as LengthBoundSpec;
 
 export enum Excess {
     annotation { "Name" : "Left and Back" }
@@ -32,6 +33,9 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         
         annotation { "Name" : "Octagon Side Length:" }
         isLength(definition.sideLength, MY_OCTAGON_BOUNDS);
+        
+        annotation { "Name" : "Strut Width:" }
+        isLength(definition.strutWidth, MY_STRUT_BOUNDS);
         
         annotation { "Name" : "Excess Material" }
         definition.excess is Excess;
@@ -146,15 +150,13 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         var roundedRepeatLength = floor(repeatLength);
         var roundedRepeatWidth = floor(repeatWidth);
         
-        const value = 2 * inch;
-        // temp use for extrude 1
+        var strut = definition.strutWidth;
         
-        // creates the full base sketch, under review
+        // creates the full base sketch, finished
         var baseSketch = newSketchOnPlane(context, id + "baseSketch", {
                 "sketchPlane" : XY_PLANE
             });
             
-            // copies sampleSketch to create the full pattern
             linearPattern(context, id + "linearPattern1", {
                         "patternType" : PatternType.FACE,
                         "entities" : qSketchRegion(id + "sampleSketch"),
@@ -174,12 +176,11 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         // not working
         extrude(context, id + "extrude1", {
                 "bodyType" : ExtendedToolBodyType.THIN,
-                "entities" : qSketchRegion(id + "baseSketch"),
-                "endBound" : BoundingType.BLIND,
+                // "oppositeDirection" : true,
                 "depth" : baseHeight,
-                "wallShape" : qCreatedBy(newId() + "Front", EntityType.FACE),
-                "thickness1" : value,
-                "thickness2" : value
+                "wallShape" : qCreatedBy(id + "baseSketch", EntityType.BODY),
+                "thickness1" : strut,
+                "thickness2" : strut
         });
         
         // creates the excess part sketch, finished
