@@ -189,35 +189,31 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                 "sketchPlane" : XY_PLANE
             });
             
-            skRectangle(excessSketch, "baserectangle", {
-                    "firstCorner" : vector(0, 0) * inch,
-                    "secondCorner" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample)
+            // redundant
+            // skRectangle(excessSketch, "baserectangle", {
+            //         "firstCorner" : vector(0, 0) * inch,
+            //         "secondCorner" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample)
+            // });
+            // skRectangle(excessSketch, "fullrectangle", {
+            //         "firstCorner" : vector(0, 0) * inch,
+            //         "secondCorner" : vector(baseWidth, baseLength)
+            // });
+            
+            fCuboid(context, id + "baseCuboid", {
+                    "corner1" : vector(0, 0, 0) * inch,
+                    "corner2" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample, baseHeight)
             });
-            skRectangle(excessSketch, "fullrectangle", {
-                    "firstCorner" : vector(0, 0) * inch,
-                    "secondCorner" : vector(baseWidth, baseLength)
+            
+            fCuboid(context, id + "fullCuboid", {
+                    "corner1" : vector(0, 0, 0) * inch,
+                    "corner2" : vector(baseWidth, baseLength, baseHeight)
+            });
+            
+            opBoolean(context, id + "boolean1", {
+                    "tools" : qCreatedBy(id + "baseCuboid", EntityType.BODY),
+                    "targets" : qCreatedBy(id + "fullCuboid", EntityType.BODY),
+                    "operationType" : BooleanOperationType.SUBTRACTION
             });
             
             skSolve(excessSketch);
-        
-        // creates extruded excess -- uhhh not working right now and breaks script :D
-        opExtrude(context, id + "excessExtrude", {
-                "entities" : qSketchRegion(id + "excessSketch", EntityType.),
-                "direction" : evOwnerSketchPlane(context, {"entity" : "excessSketch"}).normal,
-                "endBound" : BoundingType.BLIND,
-                "endDepth" : baseHeight
-        });
-        // opExtrude(context, id + "extrude2", {
-        //         "entities" : qSketchRegion(id + "fullrectangle"),                
-        //         "direction" : evOwnerSketchPlane(context, {"entity" : "fullrectangle"}).normal,
-        //         "endBound" : BoundingType.BLIND,
-        //         "endDepth" : baseHeight
-        // });
-        
-        // opBoolean(context, id + "boolean1", {
-        //         "tools" : "extrude1",
-        //         "targets" : "extrude2",
-        //         "operationType" : BooleanOperationType.SUBTRACTION
-        // });    
-        
     });
