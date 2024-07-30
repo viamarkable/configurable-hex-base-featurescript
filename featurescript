@@ -42,13 +42,6 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         var baseHeight = definition.height;
         var octagonLength = definition.sideLength;
         
-        var sample = (octagonLength * 2 + octagonLength / sqrt(2) * 2);
-        var repeatLength = baseLength / sample;
-        var repeatWidth = baseWidth / sample;
-        
-        var roundedRepeatLength = floor(repeatLength);
-        var roundedRepeatWidth = floor(repeatWidth);
-        
         // creates sample patch sketch, finished
         var sampleSketch = newSketchOnPlane(context, id + "sampleSketch", {
                 "sketchPlane" : XY_PLANE
@@ -144,9 +137,28 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
             //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line14.end", "localSecond" : "line15.start", "localThird" : "line16.start"
             //         });
             
+            skSolve(sampleSketch);
+        
+        var sample = (octagonLength * 2 + octagonLength / sqrt(2) * 2);
+        var repeatLength = baseLength / sample;
+        var repeatWidth = baseWidth / sample;
+        
+        var roundedRepeatLength = floor(repeatLength);
+        var roundedRepeatWidth = floor(repeatWidth);
+        
+        const value = 2 * inch;
+        // temp use for extrude 1
+        
+        // creates the full base sketch, under review
+        var baseSketch = newSketchOnPlane(context, id + "baseSketch", {
+                "sketchPlane" : XY_PLANE
+            });
+            
+            // copies sampleSketch to create the full pattern
             linearPattern(context, id + "linearPattern1", {
-                        "patternType" : PatternType.PART, // .PART or .FACE ?
-                        "entities" : qEverything(EntityType.EDGE),
+                        "patternType" : PatternType.FACE,
+                        "entities" : qSketchRegion(id + "sampleSketch"),
+                        "faces" : qCreatedBy(id + "sampleSketch", EntityType.BODY),
                         "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
                         "distance" : sample,
                         "instanceCount" : roundedRepeatWidth,
@@ -157,35 +169,18 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                         "oppositeDirectionTwo" : true
                     });
             
-            skSolve(sampleSketch);
-        
-        // var sample = (octagonLength * 2 + octagonLength / sqrt(2) * 2);
-        // var repeatLength = baseLength / sample;
-        // var repeatWidth = baseWidth / sample;
-        
-        // var roundedRepeatLength = floor(repeatLength);
-        // var roundedRepeatWidth = floor(repeatWidth);
-        
-        // creates the full base sketch, under review
-        var baseSketch = newSketchOnPlane(context, id + "baseSketch", {
-                "sketchPlane" : XY_PLANE
-            });
-            
-            // copies sampleSketch to create the full pattern
-            // linearPattern(context, id + "linearPattern1", {
-            //             "patternType" : PatternType.PART, // .PART or .FACE ?
-            //             "entities" : qSketchRegion(id + "sampleSketch"),
-            //             "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
-            //             "distance" : sample,
-            //             "instanceCount" : roundedRepeatWidth,
-            //             "hasSecondDir" : true,
-            //             "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
-            //             "distanceTwo" : sample,
-            //             "instanceCountTwo" : roundedRepeatLength,
-            //             "oppositeDirectionTwo" : true
-            //         });
-            
             skSolve(baseSketch);
+        
+        // not working
+        extrude(context, id + "extrude1", {
+                "bodyType" : ExtendedToolBodyType.THIN,
+                "entities" : qSketchRegion(id + "baseSketch"),
+                "endBound" : BoundingType.BLIND,
+                "depth" : baseHeight,
+                "wallShape" : qCreatedBy(newId() + "Front", EntityType.FACE),
+                "thickness1" : value,
+                "thickness2" : value
+        });
         
         // creates the excess part sketch, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
