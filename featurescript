@@ -174,14 +174,15 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
             skSolve(baseSketch);
         
         // not working
-        extrude(context, id + "extrude1", {
-                "bodyType" : ExtendedToolBodyType.THIN,
-                // "oppositeDirection" : true,
-                "depth" : baseHeight,
-                "wallShape" : qCreatedBy(id + "baseSketch", EntityType.BODY),
-                "thickness1" : strut,
-                "thickness2" : strut
-        });
+        // extrude(context, id + "extrude1", {
+        //         "bodyType" : ExtendedToolBodyType.THIN,
+        //         // "oppositeDirection" : true,
+        //         "depth" : baseHeight,
+        //         // "wallShape" : qCreatedBy(id + "baseSketch", EntityType.BODY),
+        //         "wallShape" : qSketchRegion(id + "baseSketch"),
+        //         "thickness1" : strut,
+        //         "thickness2" : strut
+        // });
         
         // creates the excess part sketch, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
@@ -200,13 +201,15 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
             skSolve(excessSketch);
         
         // creates extruded excess -- uhhh not working right now and breaks script :D
-        // opExtrude(context, id + "extrude1", {
-        //         "entities" : qSketchRegion(id + "excessSketch"),
-        //         "endBound" : BoundingType.BLIND,
-        //         "endDepth" : baseHeight
-        // });
+        opExtrude(context, id + "excessExtrude", {
+                "entities" : qSketchRegion(id + "excessSketch", EntityType.),
+                "direction" : evOwnerSketchPlane(context, {"entity" : "excessSketch"}).normal,
+                "endBound" : BoundingType.BLIND,
+                "endDepth" : baseHeight
+        });
         // opExtrude(context, id + "extrude2", {
-        //         "entities" : qSketchRegion(id + "fullrectangle"),
+        //         "entities" : qSketchRegion(id + "fullrectangle"),                
+        //         "direction" : evOwnerSketchPlane(context, {"entity" : "fullrectangle"}).normal,
         //         "endBound" : BoundingType.BLIND,
         //         "endDepth" : baseHeight
         // });
