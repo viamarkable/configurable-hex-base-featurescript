@@ -186,10 +186,16 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         // });
         
         opExtrude(context, id + "extrude1", {
-                "entities" : sketchEntityQuery(id + "baseSketch", EntityType.EDGE, "baseSketch"),
+                // "entities" : sketchEntityQuery(id + "baseSketch", EntityType.EDGE, baseSketch),
+                "entities" : qCreatedBy(id + "baseSketch", EntityType.EDGE),
                 // "direction" : evOwnerSketchPlane(context, {"entity" : sketchEntityQuery(id + "baseSketch", EntityType.EDGE, "baseSketch")}).normal,
                 // "direction" : qCreatedBy(newId() + "Top", EntityType.FACE),
-                "direction" : evOwnerSketchPlane(context, {"entity" : qCreatedBy(newId() + "Top", EntityType.FACE)}).normal,
+                // "direction" : evOwnerSketchPlane(context, {"entity" : qCreatedBy(newId() + "Top", EntityType.FACE)}).normal,
+                // "direction" : evPlane(context, {"face" : qCreatedBy(newId() + "Top")}),
+                // "direction" : evOwnerSketchPlane(context, {"entity" : qCreatedBy(id + "baseSketch", EntityType.EDGE)}).normal,
+                "direciton" : evPlane(context, {
+                        "face" : qCreatedBy(id + "baseSketch", EntityType.EDGE)
+                }),
                 "endBound" : BoundingType.BLIND,
                 "endDepth" : 1 * inch
         });
