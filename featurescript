@@ -186,19 +186,28 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         // });
         
         opExtrude(context, id + "extrude1", {
-                // "entities" : sketchEntityQuery(id + "baseSketch", EntityType.EDGE, baseSketch),
-                "entities" : qCreatedBy(id + "baseSketch", EntityType.EDGE),
-                // "direction" : evOwnerSketchPlane(context, {"entity" : sketchEntityQuery(id + "baseSketch", EntityType.EDGE, "baseSketch")}).normal,
-                // "direction" : qCreatedBy(newId() + "Top", EntityType.FACE),
-                // "direction" : evOwnerSketchPlane(context, {"entity" : qCreatedBy(newId() + "Top", EntityType.FACE)}).normal,
-                // "direction" : evPlane(context, {"face" : qCreatedBy(newId() + "Top")}),
-                // "direction" : evOwnerSketchPlane(context, {"entity" : qCreatedBy(id + "baseSketch", EntityType.EDGE)}).normal,
-                "direciton" : evPlane(context, {
-                        "face" : qCreatedBy(id + "baseSketch", EntityType.EDGE)
-                }),
+                // "entities" : qCreatedBy(id + "sampleSketch", EntityType.EDGE),
+                // // "direction" : evOwnerSketchPlane(context, {"entity" : sketchEntityQuery(id + "baseSketch", EntityType.EDGE, "baseSketch")}).normal,
+                // // "direction" : qCreatedBy(newId() + "Top", EntityType.FACE),
+                // // "direction" : evOwnerSketchPlane(context, {"entity" : qCreatedBy(newId() + "Top", EntityType.FACE)}).normal,
+                // // "direction" : evPlane(context, {"face" : qCreatedBy(newId() + "Top")}),
+                // // "direction" : evOwnerSketchPlane(context, {"entity" : qCreatedBy(id + "baseSketch", EntityType.EDGE)}).normal,
+                // // "direction" : evPlane(context, {"face" : qCreatedBy(id + "baseSketch")}),
+                // "direction" : qCreatedBy(id + "sampleSketch", EntityType.FACE),
+                "entities" : baseSketch,
+                "direction" : vector(0, 1, 0),
                 "endBound" : BoundingType.BLIND,
-                "endDepth" : 1 * inch
+                "endDepth" : baseHeight
         });
+        
+        // extrude(context, id + "extrude1", {
+        //         "bodyType" : ExtendedToolBodyType.THIN,
+        //         // "oppositeDirection" : true,
+        //         "depth" : baseHeight,
+        //         "wallShape": qCreatedBy(id + "baseSketch", EntityType.EDGE),
+        //         "thickness1" : strut / 2,
+        //         "thickness2" : strut / 2
+        // });
         
         // creates the excess part, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
