@@ -117,30 +117,30 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                     });
             
             // redundant
-            // skConstraint(sampleSketch, "constraint1", {
-            //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line1.end", "localSecond" : "line2.end", "localThird" : "line3.start"
-            //         });
-            // skConstraint(sampleSketch, "constraint2", {
-            //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line3.end", "localSecond" : "line4.start", "localThird" : "line5.start"
-            //         });
-            // skConstraint(sampleSketch, "constraint3", {
-            //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line4.end", "localSecond" : "line7.start", "localThird" : "line14.start"
-            //         });
-            // skConstraint(sampleSketch, "constraint4", {
-            //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line5.end", "localSecond" : "line6.start", "localThird" : "line8.start"
-            //         });
-            // skConstraint(sampleSketch, "constraint5", {
-            //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line6.end", "localSecond" : "line7.end", "localThird" : "line11.start"
-            //         });
-            // skConstraint(sampleSketch, "constraint6", {
-            //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line8.end", "localSecond" : "line9.start", " localThird" : "line10.start"
-            //         });
-            // skConstraint(sampleSketch, "constraint7", {
-            //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line11.end", "localSecond" : "line12.start", "localThird" : "line13.start"
-            //         });
-            // skConstraint(sampleSketch, "constraint8", {
-            //             "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line14.end", "localSecond" : "line15.start", "localThird" : "line16.start"
-            //         });
+            skConstraint(sampleSketch, "constraint1", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line1.end", "localSecond" : "line2.end", "localThird" : "line3.start"
+                    });
+            skConstraint(sampleSketch, "constraint2", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line3.end", "localSecond" : "line4.start", "localThird" : "line5.start"
+                    });
+            skConstraint(sampleSketch, "constraint3", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line4.end", "localSecond" : "line7.start", "localThird" : "line14.start"
+                    });
+            skConstraint(sampleSketch, "constraint4", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line5.end", "localSecond" : "line6.start", "localThird" : "line8.start"
+                    });
+            skConstraint(sampleSketch, "constraint5", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line6.end", "localSecond" : "line7.end", "localThird" : "line11.start"
+                    });
+            skConstraint(sampleSketch, "constraint6", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line8.end", "localSecond" : "line9.start", " localThird" : "line10.start"
+                    });
+            skConstraint(sampleSketch, "constraint7", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line11.end", "localSecond" : "line12.start", "localThird" : "line13.start"
+                    });
+            skConstraint(sampleSketch, "constraint8", {
+                        "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line14.end", "localSecond" : "line15.start", "localThird" : "line16.start"
+                    });
             
             skSolve(sampleSketch);
         
@@ -169,18 +169,25 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                         "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
                         "distanceTwo" : sample,
                         "instanceCountTwo" : roundedRepeatLength,
-                        "oppositeDirectionTwo" : true
+                        "oppositeDirectionTwo" : true,
+                        "defaultScope" : true
                     });
+            
+            // project
             
             skSolve(baseSketch);
         
-        extrude(context, id + "extrude1", {
-                "bodyType" : ExtendedToolBodyType.THIN,
-                "depth" : baseHeight,
-                "wallShape": qSketchRegion(id + "sampleSketch", false),
-                "thickness1" : strut / 2,
-                "thickness2" : strut / 2
-        });
+        // opDeleteBodies(context, id + "deleteBodies1", {
+        //         "entities" : qCreatedBy(id + "sampleSketch", EntityType.EDGE)
+        // });
+        
+        // extrude(context, id + "extrude1", {
+        //         "bodyType" : ExtendedToolBodyType.THIN,
+        //         "depth" : baseHeight,
+        //         "wallShape": qSketchRegion(id + "sampleSketch", false),
+        //         "thickness1" : strut / 2,
+        //         "thickness2" : strut / 2
+        // });
         
         // creates the excess part, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
@@ -216,4 +223,57 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
             skSolve(excessSketch);
             
         // need to boolean everything together
+    });
+
+------------------------------------------------------------------------------------------------
+
+// FS 2
+------------------------------------------------------------------------------------------------
+
+FeatureScript 2411;
+import(path : "onshape/std/common.fs", version : "2411.0");
+
+const MY_SIZE_BOUNDS = { (inch) : [0.1, 10, 1000] } as LengthBoundSpec;
+const MY_OCTAGON_BOUNDS = { (inch) : [0.1, 0.5, 5] } as LengthBoundSpec;
+const MY_STRUT_BOUNDS = { (inch) : [0.05, 0.0625, 0.5] } as LengthBoundSpec;
+
+export enum Excess {
+    annotation { "Name" : "Left and Back" }
+    LEFT_AND_BACK,
+    annotation { "Name" : "Right and Back" }
+    RIGHT_AND_BACK,
+    annotation { "Name" : "Left and Front" }
+    LEFT_AND_FRONT,
+    annotation { "Name" : "Right and Back" }
+    RIGHT_AND_FRONT
+}
+
+annotation { "Feature Type Name" : "Config Hex Base Test2"}
+export const myFeature = defineFeature(function(context is Context, id is Id, definition is map)
+    precondition
+    {
+        annotation { "Name" : "Base Length:" }
+        isLength(definition.length, MY_SIZE_BOUNDS);
+        
+        annotation { "Name" : "Base Width:" }
+        isLength(definition.width, MY_SIZE_BOUNDS);
+        
+        annotation { "Name" : "Base Height:" }
+        isLength(definition.height, MY_OCTAGON_BOUNDS);
+        
+        annotation { "Name" : "Octagon Side Length:" }
+        isLength(definition.sideLength, MY_OCTAGON_BOUNDS);
+        
+        annotation { "Name" : "Strut Width:" }
+        isLength(definition.strutWidth, MY_STRUT_BOUNDS);
+        
+        annotation { "Name" : "Excess Material" }
+        definition.excess is Excess;
+    }
+    {
+        var baseLength = definition.length;
+        var baseWidth = definition.width;
+        var baseHeight = definition.height;
+        var octagonLength = definition.sideLength;
+        var strut = definition.strutWidth;
     });
