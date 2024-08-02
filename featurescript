@@ -59,6 +59,11 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                         "start" : vector(0 * octagonLength, octagonLength / 2),
                         "end" : vector(octagonLength / 2, octagonLength / 2)
                     });
+            
+            skConstraint(sampleSketchStraight, "constraint1", {
+                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line1.end", "localSecond" : "line2.end"
+            });
+            
             skLineSegment(sampleSketchStraight, "line4", {
                         "start" : vector(octagonLength / 2 + octagonLength / sqrt(2), octagonLength / 2 + octagonLength / sqrt(2)),
                         "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), octagonLength / 2 + octagonLength / sqrt(2))
@@ -75,6 +80,20 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                         "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), octagonLength / 2 + octagonLength / sqrt(2)),
                         "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), octagonLength * 1.5 + octagonLength / sqrt(2))
                     });
+            
+            skConstraint(sampleSketchStraight, "constraint5", {
+                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line4.start", "localSecond" : "line5.start"
+            });
+            skConstraint(sampleSketchStraight, "constraint6", {
+                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line4.end", "localSecond" : "line7.start"
+            });
+            skConstraint(sampleSketchStraight, "constraint7", {
+                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line5.end", "localSecond" : "line6.start"
+            });
+            skConstraint(sampleSketchStraight, "constraint8", {
+                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line6.end", "localSecond" : "line7.end"
+            });
+            
             skLineSegment(sampleSketchStraight, "line9", {
                         "start" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
                         "end" : vector(0 * octagonLength, octagonLength * 1.5 + octagonLength / sqrt(2) * 2)
@@ -83,6 +102,11 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                         "start" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
                         "end" : vector(octagonLength / 2, octagonLength * 2 + octagonLength / sqrt(2) * 2)
                     });
+            
+            skConstraint(sampleSketchStraight, "constraint2", {
+                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line9.start", "localSecond" : "line10.start"
+            });
+            
             skLineSegment(sampleSketchStraight, "line12", {
                         "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
                         "end" : vector(octagonLength * 2 + octagonLength / sqrt(2) * 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2)
@@ -91,6 +115,11 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                         "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
                         "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength * 2 + octagonLength / sqrt(2) * 2)
                     });
+            
+            skConstraint(sampleSketchStraight, "constraint3", {
+                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line12.start", "localSecond" : "line13.start"
+            });
+            
             skLineSegment(sampleSketchStraight, "line15", {
                         "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength / 2),
                         "end" : vector(octagonLength * 2 + octagonLength / sqrt(2) * 2, octagonLength / 2)
@@ -99,6 +128,10 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                         "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength / 2),
                         "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, 0 * octagonLength)
                     });
+            
+            skConstraint(sampleSketchStraight, "constraint4", {
+                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line15.start", "localSecond" : "line16.start"
+            });
             
             skSolve(sampleSketchStraight);
         
@@ -175,14 +208,36 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                 });
             
             skSolve(baseSketchDiagonals);
-
-        // will extrude only one section of the pattern, others do not work
-        // extrude(context, id + "extrudeSampleDiagonals", {
+        
+        extrude(context, id + "extrudeSampleStraight", {
+                "bodyType" : ExtendedToolBodyType.THIN,
+                "depth" : baseHeight,
+                "wallShape": qCreatedBy(id + "sampleSketchStraight", EntityType.EDGE),
+                "thickness1" : strut / 2,
+                "thickness2" : strut / 2
+        });
+        
+        extrude(context, id + "extrudeSampleDiagonals", {
+                "bodyType" : ExtendedToolBodyType.THIN,
+                "depth" : baseHeight,
+                "wallShape": qCreatedBy(id + "sampleSketchDiagonals", EntityType.EDGE),
+                "thickness1" : strut / 2,
+                "thickness2" : strut / 2
+        });
+        
+        // extrude(context, id + "extrudeBaseDiagonals", {
         //         "bodyType" : ExtendedToolBodyType.THIN,
         //         "depth" : baseHeight,
-        //         "wallShape": qCreatedBy(id + "sampleSketchDiagonals", EntityType.EDGE),
+        //         "wallShape": qCreatedBy(id + "baseSketchDiagonals", EntityType.EDGE),
         //         "thickness1" : strut / 2,
         //         "thickness2" : strut / 2
+        // });
+        
+        // opExtrude(context, id + "extrude1", {
+        //         "entities" : qCreatedBy(id + "baseSketchDiagonals", EntityType.EDGE),
+        //         "direction" : vector(0, 0, 1),
+        //         "endBound" : BoundingType.BLIND,
+        //         "endDepth" : 1 * inch
         // });
         
         // creates the excess part, finished
@@ -220,3 +275,4 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
 
         // need to boolean everything together
     });
+
