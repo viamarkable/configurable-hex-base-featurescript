@@ -8,14 +8,10 @@ const MY_STRUT_BOUNDS = { (inch) : [0.05, 0.0625, 0.5] } as LengthBoundSpec;
 
 export enum Excess
 {
-    annotation { "Name" : "Left and Back" }
-    LEFT_AND_BACK,
-    annotation { "Name" : "Right and Back" }
-    RIGHT_AND_BACK,
-    annotation { "Name" : "Left and Front" }
-    LEFT_AND_FRONT,
-    annotation { "Name" : "Right and Back" }
-    RIGHT_AND_FRONT
+    annotation { "Name" : "Right" }
+    RIGHT,
+    annotation { "Name" : "Left" }
+    LEFT
 }
 
 annotation { "Feature Type Name" : "Configurable Octagon Base" }
@@ -313,28 +309,28 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
         //         "operationType" : BooleanOperationType.UNION
         // });
         
-        opBoolean(context, id + "boolean1", {
-                "tools" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
-                "operationType" : BooleanOperationType.UNION
-        });
-        
-        // linearPattern(context, id + "linearPattern1", {
-        //         "entities" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
-        //         "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
-        //         "distance" : sample,
-        //         "instanceCount" : roundedRepeatWidth,
-        //         "hasSecondDir" : true,
-        //         "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
-        //         "distanceTwo" : sample,
-        //         "instanceCountTwo" : roundedRepeatLength,
-        //         "oppositeDirectionTwo" : true,
-        //         "defaultScope" : true
+        // opBoolean(context, id + "boolean1", {
+        //         "tools" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
+        //         "operationType" : BooleanOperationType.UNION
         // });
         
+        linearPattern(context, id + "linearPattern1", {
+                "entities" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
+                "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
+                "distance" : sample,
+                "instanceCount" : roundedRepeatWidth,
+                "hasSecondDir" : true,
+                "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
+                "distanceTwo" : sample,
+                "instanceCountTwo" : roundedRepeatLength,
+                "oppositeDirectionTwo" : true,
+                "defaultScope" : true
+        });
+        
         // creates the excess part, finished
-        var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
-                "sketchPlane" : XY_PLANE
-            });
+        // var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
+        //         "sketchPlane" : XY_PLANE
+        //     });
             
             // redundant
             // skRectangle(excessSketch, "baserectangle", {
@@ -345,24 +341,54 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
             //         "firstCorner" : vector(0, 0) * inch,
             //         "secondCorner" : vector(baseWidth, baseLength)
             // });
-            if (definition.excess is LEFT_AND_BACK) {
-            fCuboid(context, id + "baseCuboid", {
-                        "corner1" : vector(0, 0, 0) * inch,
-                        "corner2" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample, baseHeight)
-                    });
             
-            fCuboid(context, id + "fullCuboid", {
-                        "corner1" : vector(0, 0, 0) * inch,
-                        "corner2" : vector(baseWidth, baseLength, baseHeight)
-                    });
-            
-            opBoolean(context, id + "excessBoolean", {
-                        "tools" : qCreatedBy(id + "baseCuboid", EntityType.BODY),
-                        "targets" : qCreatedBy(id + "fullCuboid", EntityType.BODY),
-                        "operationType" : BooleanOperationType.SUBTRACTION
-                    });
+            if (definition.excess is Excess.RIGHT) {
+                var excessSketchR = newSketchOnPlane(context, id + "excessSketchR", {
+                "sketchPlane" : XY_PLANE
+                });
+                
+                fCuboid(context, id + "baseCuboidR", {
+                            "corner1" : vector(0, 0, 0) * inch,
+                            "corner2" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample, baseHeight)
+                        });
+                
+                fCuboid(context, id + "fullCuboidR", {
+                            "corner1" : vector(0, 0, 0) * inch,
+                            "corner2" : vector(baseWidth, baseLength, baseHeight)
+                        });
+                
+                opBoolean(context, id + "excessBooleanR", {
+                            "tools" : qCreatedBy(id + "baseCuboidR", EntityType.BODY),
+                            "targets" : qCreatedBy(id + "fullCuboidR", EntityType.BODY),
+                            "operationType" : BooleanOperationType.SUBTRACTION
+                        });
+                skSolve(excessSketchR);
+            } else if (definition.excess is Excess.LEFT) {
+                var excessSketchL = newSketchOnPlane(context, id + "excessSketchL", {
+                "sketchPlane" : XY_PLANE
+                });
+                
+                fCuboid(context, id + "baseCuboidL", {
+                            "corner1" : vector(0, 0, 0) * inch,
+                            "corner2" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample, baseHeight)
+                });
+                
+                fCuboid(context, id + "fullCuboidL", {
+                        "corner1" : vector((roundedRepeatWidth * sample) - baseWidth, baseLength, baseHeight),
+                        "corner2" : vector(roundedRepeatWidth * sample, 0 * octagonLength, 0 * octagonLength)
+                });
+                
+                opBoolean(context, id + "excessBooleanL", {
+                            "tools" : qCreatedBy(id + "baseCuboidL", EntityType.BODY),
+                            "targets" : qCreatedBy(id + "fullCuboidL", EntityType.BODY),
+                            "operationType" : BooleanOperationType.SUBTRACTION
+                        });
+                skSolve(excessSketchL);
+            } else {
+                print("LOL");
             }
-            skSolve(excessSketch);
+            
+            // skSolve(excessSketch);
 
-        // TODO: add in circular center, add excess conditionals, delete sketches, boolean everything
+        // TODO: add in circular center, delete sketches, boolean everything
     });
