@@ -53,85 +53,52 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
             
             skLineSegment(sampleSketchStraight, "line1", {
                         "start" : vector(octagonLength / 2, 0 * octagonLength),
-                        "end" : vector(octagonLength / 2, octagonLength / 2)
+                        "end" : vector(octagonLength / 2, (octagonLength / 2) - (0.001 * inch))
                     });
             skLineSegment(sampleSketchStraight, "line2", {
                         "start" : vector(0 * octagonLength, octagonLength / 2),
-                        "end" : vector(octagonLength / 2, octagonLength / 2)
+                        "end" : vector((octagonLength / 2) - (0.001 * inch), octagonLength / 2)
                     });
-            
-            skConstraint(sampleSketchStraight, "constraint1", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line1.end", "localSecond" : "line2.end"
-            });
-            
             skLineSegment(sampleSketchStraight, "line4", {
-                        "start" : vector(octagonLength / 2 + octagonLength / sqrt(2), octagonLength / 2 + octagonLength / sqrt(2)),
-                        "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), octagonLength / 2 + octagonLength / sqrt(2))
+                        "start" : vector((octagonLength / 2) + (octagonLength / sqrt(2)) + (0.001 * inch), octagonLength / 2 + octagonLength / sqrt(2)),
+                        "end" : vector((octagonLength * 1.5) + (octagonLength / sqrt(2)) - (0.001 * inch), octagonLength / 2 + octagonLength / sqrt(2))
                     });
             skLineSegment(sampleSketchStraight, "line5", {
-                        "start" : vector(octagonLength / 2 + octagonLength / sqrt(2), octagonLength / 2 + octagonLength / sqrt(2)),
-                        "end" : vector(octagonLength / 2 + octagonLength / sqrt(2), octagonLength * 1.5 + octagonLength / sqrt(2))
+                        "start" : vector(octagonLength / 2 + octagonLength / sqrt(2), (octagonLength / 2) + (octagonLength / sqrt(2)) + (0.001 * inch)),
+                        "end" : vector(octagonLength / 2 + octagonLength / sqrt(2), (octagonLength * 1.5) + (octagonLength / sqrt(2)) - (0.001 * inch))
                     });
             skLineSegment(sampleSketchStraight, "line6", {
-                        "start" : vector(octagonLength / 2 + octagonLength / sqrt(2), octagonLength * 1.5 + octagonLength / sqrt(2)),
-                        "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), octagonLength * 1.5 + octagonLength / sqrt(2))
+                        "start" : vector((octagonLength / 2) + (octagonLength / sqrt(2)) + (0.001 * inch), octagonLength * 1.5 + octagonLength / sqrt(2)),
+                        "end" : vector((octagonLength * 1.5) + (octagonLength / sqrt(2)) - (0.001 * inch), octagonLength * 1.5 + octagonLength / sqrt(2))
                     });
             skLineSegment(sampleSketchStraight, "line7", {
-                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), octagonLength / 2 + octagonLength / sqrt(2)),
-                        "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), octagonLength * 1.5 + octagonLength / sqrt(2))
+                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), (octagonLength / 2) + (octagonLength / sqrt(2)) + (0.001 * inch)),
+                        "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), (octagonLength * 1.5) + (octagonLength / sqrt(2)) - (0.001 * inch))
                     });
-            
-            skConstraint(sampleSketchStraight, "constraint5", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line4.start", "localSecond" : "line5.start"
-            });
-            skConstraint(sampleSketchStraight, "constraint6", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line4.end", "localSecond" : "line7.start"
-            });
-            skConstraint(sampleSketchStraight, "constraint7", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line5.end", "localSecond" : "line6.start"
-            });
-            skConstraint(sampleSketchStraight, "constraint8", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line6.end", "localSecond" : "line7.end"
-            });
-            
             skLineSegment(sampleSketchStraight, "line9", {
-                        "start" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
+                        "start" : vector((octagonLength / 2) - (0.001 * inch), octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
                         "end" : vector(0 * octagonLength, octagonLength * 1.5 + octagonLength / sqrt(2) * 2)
                     });
             skLineSegment(sampleSketchStraight, "line10", {
-                        "start" : vector(octagonLength / 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
+                        "start" : vector(octagonLength / 2, (octagonLength * 1.5) + ((octagonLength / sqrt(2)) * 2) + (0.001 * inch)),
                         "end" : vector(octagonLength / 2, octagonLength * 2 + octagonLength / sqrt(2) * 2)
                     });
-            
-            skConstraint(sampleSketchStraight, "constraint2", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line9.start", "localSecond" : "line10.start"
-            });
-            
             skLineSegment(sampleSketchStraight, "line12", {
-                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
+                        "start" : vector((octagonLength * 1.5) + ((octagonLength / sqrt(2)) * 2) + (0.001 * inch), octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
                         "end" : vector(octagonLength * 2 + octagonLength / sqrt(2) * 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2)
                     });
             skLineSegment(sampleSketchStraight, "line13", {
-                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength * 1.5 + octagonLength / sqrt(2) * 2),
+                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength * 1.5 + ((octagonLength / sqrt(2)) * 2) + (0.001 * inch)),
                         "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength * 2 + octagonLength / sqrt(2) * 2)
                     });
-            
-            skConstraint(sampleSketchStraight, "constraint3", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line12.start", "localSecond" : "line13.start"
-            });
-            
             skLineSegment(sampleSketchStraight, "line15", {
-                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength / 2),
+                        "start" : vector((octagonLength * 1.5) + ((octagonLength / sqrt(2)) * 2) + (0.001 * inch), octagonLength / 2),
                         "end" : vector(octagonLength * 2 + octagonLength / sqrt(2) * 2, octagonLength / 2)
                     });
             skLineSegment(sampleSketchStraight, "line16", {
-                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, octagonLength / 2),
+                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, (octagonLength / 2) - (0.001 * inch)),
                         "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2) * 2, 0 * octagonLength)
                     });
-            
-            skConstraint(sampleSketchStraight, "constraint4", {
-                    "constraintType" : ConstraintType.COINCIDENT, "localFirst" : "line15.start", "localSecond" : "line16.start"
-            });
             
             skSolve(sampleSketchStraight);
         
@@ -167,47 +134,47 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
         
         var strut = definition.strutWidth;
         
-        var baseSketchStraight = newSketch(context, id + "baseSketchStraight", {
-                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
-            });
+        // var baseSketchStraight = newSketch(context, id + "baseSketchStraight", {
+        //         "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
+        //     });
             
-            linearPattern(context, id + "linearPatternStraight", {
-                    "patternType" : PatternType.FACE,
-                    "entities" : qSketchRegion(id + "sampleSketchStraight"),
-                    "faces" : qCreatedBy(id + "sampleSketchStraight", EntityType.BODY),
-                    "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
-                    "distance" : sample,
-                    "instanceCount" : roundedRepeatWidth,
-                    "hasSecondDir" : true,
-                    "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
-                    "distanceTwo" : sample,
-                    "instanceCountTwo" : roundedRepeatLength,
-                    "oppositeDirectionTwo" : true,
-                    "defaultScope" : true
-                });
+        //     linearPattern(context, id + "linearPatternStraight", {
+        //             "patternType" : PatternType.FACE,
+        //             "entities" : qSketchRegion(id + "sampleSketchStraight"),
+        //             "faces" : qCreatedBy(id + "sampleSketchStraight", EntityType.BODY),
+        //             "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
+        //             "distance" : sample,
+        //             "instanceCount" : roundedRepeatWidth,
+        //             "hasSecondDir" : true,
+        //             "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
+        //             "distanceTwo" : sample,
+        //             "instanceCountTwo" : roundedRepeatLength,
+        //             "oppositeDirectionTwo" : true,
+        //             "defaultScope" : true
+        //         });
             
-            skSolve(baseSketchStraight);
+        //     skSolve(baseSketchStraight);
         
-        var baseSketchDiagonals = newSketch(context, id + "baseSketchDiagonals", {
-                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
-            });
+        // var baseSketchDiagonals = newSketch(context, id + "baseSketchDiagonals", {
+        //         "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
+        //     });
             
-            linearPattern(context, id + "linearPatternDiagonals", {
-                    "patternType" : PatternType.FACE,
-                    "entities" : qSketchRegion(id + "sampleSketchDiagonals"),
-                    "faces" : qCreatedBy(id + "sampleSketchDiagonals", EntityType.BODY),
-                    "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
-                    "distance" : sample,
-                    "instanceCount" : roundedRepeatWidth,
-                    "hasSecondDir" : true,
-                    "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
-                    "distanceTwo" : sample,
-                    "instanceCountTwo" : roundedRepeatLength,
-                    "oppositeDirectionTwo" : true,
-                    "defaultScope" : true
-                });
+        //     linearPattern(context, id + "linearPatternDiagonals", {
+        //             "patternType" : PatternType.FACE,
+        //             "entities" : qSketchRegion(id + "sampleSketchDiagonals"),
+        //             "faces" : qCreatedBy(id + "sampleSketchDiagonals", EntityType.BODY),
+        //             "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
+        //             "distance" : sample,
+        //             "instanceCount" : roundedRepeatWidth,
+        //             "hasSecondDir" : true,
+        //             "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
+        //             "distanceTwo" : sample,
+        //             "instanceCountTwo" : roundedRepeatLength,
+        //             "oppositeDirectionTwo" : true,
+        //             "defaultScope" : true
+        //         });
             
-            skSolve(baseSketchDiagonals);
+        //     skSolve(baseSketchDiagonals);
         
         extrude(context, id + "extrudeSampleStraight", {
                 "bodyType" : ExtendedToolBodyType.THIN,
@@ -225,54 +192,56 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                 "thickness2" : strut / 2
         });
         
-        // extrude(context, id + "extrudeBaseDiagonals", {
-        //         "bodyType" : ExtendedToolBodyType.THIN,
-        //         "depth" : baseHeight,
-        //         "wallShape": qCreatedBy(id + "baseSketchDiagonals", EntityType.EDGE),
-        //         "thickness1" : strut / 2,
-        //         "thickness2" : strut / 2
-        // });
+        opBoolean(context, id + "booleanSample", {
+                "tools" : qUnion([qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
+                "operationType" : BooleanOperationType.UNION
+        });
         
-        // opExtrude(context, id + "extrude1", {
-        //         "entities" : qCreatedBy(id + "baseSketchDiagonals", EntityType.EDGE),
-        //         "direction" : vector(0, 0, 1),
-        //         "endBound" : BoundingType.BLIND,
-        //         "endDepth" : 1 * inch
-        // });
+        linearPattern(context, id + "linearPattern1", {
+                "entities" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
+                "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
+                "distance" : sample,
+                "instanceCount" : roundedRepeatWidth,
+                "hasSecondDir" : true,
+                "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
+                "distanceTwo" : sample,
+                "instanceCountTwo" : roundedRepeatLength,
+                "oppositeDirectionTwo" : true,
+                "defaultScope" : true
+        });
         
         // creates the excess part, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
-                "sketchPlane" : plane(vector(0, 0, 0) * inch, vector(0, 0, 1))
+                "sketchPlane" : XY_PLANE
             });
+            
+            // redundant
+            // skRectangle(excessSketch, "baserectangle", {
+            //         "firstCorner" : vector(0, 0) * inch,
+            //         "secondCorner" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample)
+            // });
+            // skRectangle(excessSketch, "fullrectangle", {
+            //         "firstCorner" : vector(0, 0) * inch,
+            //         "secondCorner" : vector(baseWidth, baseLength)
+            // });
+            
+            fCuboid(context, id + "baseCuboid", {
+                        "corner1" : vector(0, 0, 0) * inch,
+                        "corner2" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample, baseHeight)
+                    });
+            
+            fCuboid(context, id + "fullCuboid", {
+                        "corner1" : vector(0, 0, 0) * inch,
+                        "corner2" : vector(baseWidth, baseLength, baseHeight)
+                    });
+            
+            opBoolean(context, id + "excessBoolean", {
+                        "tools" : qCreatedBy(id + "baseCuboid", EntityType.BODY),
+                        "targets" : qCreatedBy(id + "fullCuboid", EntityType.BODY),
+                        "operationType" : BooleanOperationType.SUBTRACTION
+                    });
+            
+            skSolve(excessSketch);
 
-        // redundant
-        // skRectangle(excessSketch, "baserectangle", {
-        //         "firstCorner" : vector(0, 0) * inch,
-        //         "secondCorner" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample)
-        // });
-        // skRectangle(excessSketch, "fullrectangle", {
-        //         "firstCorner" : vector(0, 0) * inch,
-        //         "secondCorner" : vector(baseWidth, baseLength)
-        // });
-
-        fCuboid(context, id + "baseCuboid", {
-                    "corner1" : vector(0, 0, 0) * inch,
-                    "corner2" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample, baseHeight)
-                });
-
-        fCuboid(context, id + "fullCuboid", {
-                    "corner1" : vector(0, 0, 0) * inch,
-                    "corner2" : vector(baseWidth, baseLength, baseHeight)
-                });
-
-        opBoolean(context, id + "excessBoolean", {
-                    "tools" : qCreatedBy(id + "baseCuboid", EntityType.BODY),
-                    "targets" : qCreatedBy(id + "fullCuboid", EntityType.BODY),
-                    "operationType" : BooleanOperationType.SUBTRACTION
-                });
-
-        skSolve(excessSketch);
-
-        // need to boolean everything together
+        // TODO: add in circular center, add excess conditionals, delete sketches, boolean everything
     });
-
