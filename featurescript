@@ -125,6 +125,59 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
             
             skSolve(sampleSketchDiagonals);
         
+        var sampleSketchCenter = newSketch(context, id + "sampleSketchCenter", {
+                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
+            });
+            
+            skLineSegment(sampleSketchCenter, "line17", {
+                        "start" : vector((octagonLength / 2) + (octagonLength / sqrt(2)), octagonLength / 2 + octagonLength / sqrt(2)),
+                        "end" : vector((octagonLength * 1.5) + (octagonLength / sqrt(2)), octagonLength / 2 + octagonLength / sqrt(2))
+                    });
+            skLineSegment(sampleSketchCenter, "line18", {
+                        "start" : vector(octagonLength / 2 + octagonLength / sqrt(2), (octagonLength / 2) + (octagonLength / sqrt(2))),
+                        "end" : vector(octagonLength / 2 + octagonLength / sqrt(2), (octagonLength * 1.5) + (octagonLength / sqrt(2)))
+                    });
+            skLineSegment(sampleSketchCenter, "line19", {
+                        "start" : vector((octagonLength / 2) + (octagonLength / sqrt(2)), octagonLength * 1.5 + octagonLength / sqrt(2)),
+                        "end" : vector((octagonLength * 1.5) + (octagonLength / sqrt(2)), octagonLength * 1.5 + octagonLength / sqrt(2))
+                    });
+            skLineSegment(sampleSketchCenter, "line20", {
+                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), (octagonLength / 2) + (octagonLength / sqrt(2))),
+                        "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), (octagonLength * 1.5) + (octagonLength / sqrt(2)))
+                    });
+            
+            skSolve(sampleSketchCenter);
+        
+        var sampleSketchCorner = newSketch(context, id + "sampleSketchCorner", {
+                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
+            });
+            
+            skLineSegment(sampleSketchCorner, "line21", {
+                        "start" : vector(octagonLength / 2, 0 * octagonLength),
+                        "end" : vector(octagonLength / 2, (octagonLength / 2) - (0.001 * inch))
+                    });
+            skLineSegment(sampleSketchCorner, "line22", {
+                        "start" : vector(0 * octagonLength, octagonLength / 2),
+                        "end" : vector((octagonLength / 2) - (0.001 * inch), octagonLength / 2)
+                    });
+            
+            skArc(sampleSketchCorner, "arc1", {
+                    "start" : vector(5, 0) * millimeter,
+                    "mid" : vector(cos(45 * degree) * 5, sin(45 * degree) * 5) * millimeter,
+                    "end" : vector(0, 5) * millimeter
+            });
+            
+            skLineSegment(sampleSketchCorner, "line23", {
+                    "start" : vector(5, 0) * millimeter,
+                    "end" : vector(octagonLength / 2, 0 * octagonLength)
+            });
+            skLineSegment(sampleSketchCorner, "line24", {
+                    "start" : vector(0, 5) * millimeter,
+                    "end" : vector(0 * octagonLength, octagonLength / 2)
+            });
+            
+            skSolve(sampleSketchCorner);
+        
         var sample = (octagonLength * 2 + octagonLength / sqrt(2) * 2);
         var repeatLength = baseLength / sample;
         var repeatWidth = baseWidth / sample;
@@ -134,48 +187,7 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
         
         var strut = definition.strutWidth;
         
-        // var baseSketchStraight = newSketch(context, id + "baseSketchStraight", {
-        //         "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
-        //     });
-            
-        //     linearPattern(context, id + "linearPatternStraight", {
-        //             "patternType" : PatternType.FACE,
-        //             "entities" : qSketchRegion(id + "sampleSketchStraight"),
-        //             "faces" : qCreatedBy(id + "sampleSketchStraight", EntityType.BODY),
-        //             "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
-        //             "distance" : sample,
-        //             "instanceCount" : roundedRepeatWidth,
-        //             "hasSecondDir" : true,
-        //             "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
-        //             "distanceTwo" : sample,
-        //             "instanceCountTwo" : roundedRepeatLength,
-        //             "oppositeDirectionTwo" : true,
-        //             "defaultScope" : true
-        //         });
-            
-        //     skSolve(baseSketchStraight);
-        
-        // var baseSketchDiagonals = newSketch(context, id + "baseSketchDiagonals", {
-        //         "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
-        //     });
-            
-        //     linearPattern(context, id + "linearPatternDiagonals", {
-        //             "patternType" : PatternType.FACE,
-        //             "entities" : qSketchRegion(id + "sampleSketchDiagonals"),
-        //             "faces" : qCreatedBy(id + "sampleSketchDiagonals", EntityType.BODY),
-        //             "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
-        //             "distance" : sample,
-        //             "instanceCount" : roundedRepeatWidth,
-        //             "hasSecondDir" : true,
-        //             "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
-        //             "distanceTwo" : sample,
-        //             "instanceCountTwo" : roundedRepeatLength,
-        //             "oppositeDirectionTwo" : true,
-        //             "defaultScope" : true
-        //         });
-            
-        //     skSolve(baseSketchDiagonals);
-        
+        // base structure
         extrude(context, id + "extrudeSampleStraight", {
                 "bodyType" : ExtendedToolBodyType.THIN,
                 "depth" : baseHeight,
@@ -196,6 +208,39 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                 "tools" : qUnion([qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
                 "operationType" : BooleanOperationType.UNION
         });
+        
+        // center structure
+        extrude(context, id + "extrudeSampleCenter", {
+                "entities" : qSketchRegion(id + "sampleSketchCenter"),
+                "endBound" : BoundingType.BLIND,
+                "depth" : baseHeight
+        });
+        
+        fCylinder(context, id + "cylinderCenter", {
+                "topCenter" : vector(octagonLength + (octagonLength / sqrt(2)) - (0.001 * inch), octagonLength + octagonLength / sqrt(2), baseHeight),
+                "bottomCenter" : vector(octagonLength + (octagonLength / sqrt(2)) - (0.001 * inch), octagonLength + octagonLength / sqrt(2), 0 * octagonLength),
+                "radius" : 5 * millimeter
+        });
+        
+        opBoolean(context, id + "booleanCenter", {
+                "tools" : qCreatedBy(id + "cylinderCenter", EntityType.BODY),
+                "targets" : qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY),
+                "operationType" : BooleanOperationType.SUBTRACTION
+        });
+        
+        // opBoolean(context, id + "booleanSampleFull", {
+        //         "tools" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY), qCreatedBy(id + "booleanSampleFull", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY), qCreatedBy(id + "cylinderCenter", EntityType.BODY)]),
+        //         "operationType" : BooleanOperationType.UNION
+        // });
+        
+        // corner structure
+        // opExtrude(context, id + "extrudeCorner", {
+        //         "entities" : qCreatedBy(id + "sampleSketchCorner", EntityType.FACE),
+        //         "direction" : vector(0, 1, 0),
+        //         "endBound" : BoundingType.BLIND,
+        //         "endDepth" : baseHeight
+        // });
+        
         
         linearPattern(context, id + "linearPattern1", {
                 "entities" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
