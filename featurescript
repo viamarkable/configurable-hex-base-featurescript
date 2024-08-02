@@ -345,7 +345,7 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
             //         "firstCorner" : vector(0, 0) * inch,
             //         "secondCorner" : vector(baseWidth, baseLength)
             // });
-            
+            if (definition.excess is LEFT_AND_BACK) {
             fCuboid(context, id + "baseCuboid", {
                         "corner1" : vector(0, 0, 0) * inch,
                         "corner2" : vector(roundedRepeatWidth * sample, roundedRepeatLength * sample, baseHeight)
@@ -361,7 +361,7 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                         "targets" : qCreatedBy(id + "fullCuboid", EntityType.BODY),
                         "operationType" : BooleanOperationType.SUBTRACTION
                     });
-            
+            }
             skSolve(excessSketch);
 
         // TODO: add in circular center, add excess conditionals, delete sketches, boolean everything
