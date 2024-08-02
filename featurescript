@@ -18,9 +18,9 @@ export enum Excess
     RIGHT_AND_FRONT
 }
 
-annotation { "Feature Type Name" : "Configurable Hex Base 2" }
+annotation { "Feature Type Name" : "Configurable Octagon Base" }
 
-export const hexBase = defineFeature(function(context is Context, id is Id, definition is map)
+export const octBase = defineFeature(function(context is Context, id is Id, definition is map)
     precondition
     {
         annotation { "Name" : "Base Length:" }
@@ -47,8 +47,8 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         var baseHeight = definition.height;
         var octagonLength = definition.sideLength;
         
-        var sampleSketchStraight = newSketchOnPlane(context, id + "sampleSketchStraight", {
-                "sketchPlane" : q
+        var sampleSketchStraight = newSketch(context, id + "sampleSketchStraight", {
+                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
             });
             
             skLineSegment(sampleSketchStraight, "line1", {
@@ -102,8 +102,8 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
             
             skSolve(sampleSketchStraight);
         
-        var sampleSketchDiagonals = newSketchOnPlane(context, id + "sampleSketchDiagonals", {
-                "sketchPlane" : plane(vector(0, 0, 0) * meter, vector(0, 0, 1), vector(1, 0, 0))
+        var sampleSketchDiagonals = newSketch(context, id + "sampleSketchDiagonals", {
+                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
             });
             
             skLineSegment(sampleSketchDiagonals, "line3", {
@@ -135,7 +135,7 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
         var strut = definition.strutWidth;
         
         var baseSketchStraight = newSketch(context, id + "baseSketchStraight", {
-                "sketchPlane" : plane(vector(0, 0, 0) * meter, vector(0, 0, 1), vector(1, 0, 0))
+                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
             });
             
             linearPattern(context, id + "linearPatternStraight", {
@@ -155,8 +155,8 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
             
             skSolve(baseSketchStraight);
         
-        var baseSketchDiagonals = newSketchOnPlane(context, id + "baseSketchDiagonals", {
-                "sketchPlane" : plane(vector(0, 0, 0) * meter, vector(0, 0, 1), vector(1, 0, 0))
+        var baseSketchDiagonals = newSketch(context, id + "baseSketchDiagonals", {
+                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
             });
             
             linearPattern(context, id + "linearPatternDiagonals", {
@@ -175,10 +175,19 @@ export const hexBase = defineFeature(function(context is Context, id is Id, defi
                 });
             
             skSolve(baseSketchDiagonals);
+
+        // will extrude only one section of the pattern, others do not work
+        // extrude(context, id + "extrudeSampleDiagonals", {
+        //         "bodyType" : ExtendedToolBodyType.THIN,
+        //         "depth" : baseHeight,
+        //         "wallShape": qCreatedBy(id + "sampleSketchDiagonals", EntityType.EDGE),
+        //         "thickness1" : strut / 2,
+        //         "thickness2" : strut / 2
+        // });
         
         // creates the excess part, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
-                "sketchPlane" : plane(vector(0, 0, 0) * meter, vector(0, 0, 1), vector(1, 0, 0))
+                "sketchPlane" : plane(vector(0, 0, 0) * inch, vector(0, 0, 1))
             });
 
         // redundant
