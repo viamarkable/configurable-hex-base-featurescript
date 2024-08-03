@@ -309,15 +309,23 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
         
         // corner structure
         extrude(context, id + "extrudeCorner", {
-                "entities" : qSketchRegion(id + "sampleSketchCorner1"),
+                "entities" : qUnion([qSketchRegion(id + "sampleSketchCorner1"), qSketchRegion(id + "sampleSketchCorner2"), qSketchRegion(id + "sampleSketchCorner3"), qSketchRegion(id + "sampleSketchCorner4")]),
                 "endBound" : BoundingType.BLIND,
                 "depth" : baseHeight
         });
         
-        opBoolean(context, id + "booleanC1", {
-                "tools" : ,
-                "operationType" : BooleanOperationType.SUBTRACT_COMPLEMENT
+        opBoolean(context, id + "boolean1", {
+                "tools" : qUnion([qCreatedBy(id + "extrudeCorner", EntityType.BODY), qCreatedBy(id + "booleanCenter", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY)]),
+                "targets" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
+                "operationType" : BooleanOperationType.SUBTRACTION,
+                "keepTools" : true
         });
+        
+        // opBoolean(context, id + "boolean2", {
+        //         "tools" : qUnion([qCreatedBy(id + "boolean1", EntityType.BODY), qCreatedBy(id + "extrudeCorner", EntityType.BODY), qCreatedBy(id + "booleanCenter", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY), qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
+        //         "operationType" : BooleanOperationType.UNION
+        // });
+        
         // opBoolean(context, id + "booleanSampleFull", {
         //         "tools" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY), qCreatedBy(id + "booleanCenter", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY), qCreatedBy(id + "extrudeCorner", EntityType.BODY)]),
         //         "operationType" : BooleanOperationType.UNION
