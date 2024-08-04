@@ -121,29 +121,6 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
             
             skSolve(sampleSketchDiagonals);
         
-        var sampleSketchCenter = newSketch(context, id + "sampleSketchCenter", {
-                "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
-            });
-            
-            skLineSegment(sampleSketchCenter, "line17", {
-                        "start" : vector((octagonLength / 2) + (octagonLength / sqrt(2)), octagonLength / 2 + octagonLength / sqrt(2)),
-                        "end" : vector((octagonLength * 1.5) + (octagonLength / sqrt(2)), octagonLength / 2 + octagonLength / sqrt(2))
-                    });
-            skLineSegment(sampleSketchCenter, "line18", {
-                        "start" : vector(octagonLength / 2 + octagonLength / sqrt(2), (octagonLength / 2) + (octagonLength / sqrt(2))),
-                        "end" : vector(octagonLength / 2 + octagonLength / sqrt(2), (octagonLength * 1.5) + (octagonLength / sqrt(2)))
-                    });
-            skLineSegment(sampleSketchCenter, "line19", {
-                        "start" : vector((octagonLength / 2) + (octagonLength / sqrt(2)), octagonLength * 1.5 + octagonLength / sqrt(2)),
-                        "end" : vector((octagonLength * 1.5) + (octagonLength / sqrt(2)), octagonLength * 1.5 + octagonLength / sqrt(2))
-                    });
-            skLineSegment(sampleSketchCenter, "line20", {
-                        "start" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), (octagonLength / 2) + (octagonLength / sqrt(2))),
-                        "end" : vector(octagonLength * 1.5 + octagonLength / sqrt(2), (octagonLength * 1.5) + (octagonLength / sqrt(2)))
-                    });
-            
-            skSolve(sampleSketchCenter);
-        
         var sampleSketchCorner1 = newSketch(context, id + "sampleSketchCorner1", {
                 "sketchPlane" : qCreatedBy(makeId("Top"), EntityType.FACE)
             });
@@ -267,43 +244,43 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
         var strut = definition.strutWidth;
         
         // base structure
-        extrude(context, id + "extrudeSampleStraight", {
+        extrude(context, id + "extrudeSample", {
                 "bodyType" : ExtendedToolBodyType.THIN,
                 "depth" : baseHeight,
-                "wallShape": qCreatedBy(id + "sampleSketchStraight", EntityType.EDGE),
+                "defaultScope" : true,
+                "wallShape": qUnion([qCreatedBy(id + "sampleSketchStraight", EntityType.EDGE), qCreatedBy(id + "sampleSketchDiagonals", EntityType.EDGE)]),
                 "thickness1" : strut / 2,
                 "thickness2" : strut / 2
         });
         
-        extrude(context, id + "extrudeSampleDiagonals", {
-                "bodyType" : ExtendedToolBodyType.THIN,
-                "depth" : baseHeight,
-                "wallShape": qCreatedBy(id + "sampleSketchDiagonals", EntityType.EDGE),
-                "thickness1" : strut / 2,
-                "thickness2" : strut / 2
-        });
-        
-        opBoolean(context, id + "booleanSample", {
-                "tools" : qUnion([qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
-                "operationType" : BooleanOperationType.UNION
-        });
+        // opBoolean(context, id + "booleanSample", {
+        //         "tools" : qCreatedBy(id + "extrudeSample", EntityType.BODY),
+        //         "operationType" : BooleanOperationType.UNION
+        // });
         
         // center structure
-        extrude(context, id + "extrudeSampleCenter", {
-                "entities" : qSketchRegion(id + "sampleSketchCenter"),
-                "endBound" : BoundingType.BLIND,
-                "depth" : baseHeight
+        fCuboid(context, id + "cuboidCenter", {
+                "corner1" : vector((octagonLength / 2) + (octagonLength / sqrt(2)), octagonLength / 2 + octagonLength / sqrt(2), 0 * inch),
+                "corner2" : vector((octagonLength * 1.5) + (octagonLength / sqrt(2)), octagonLength * 1.5 + octagonLength / sqrt(2), baseHeight)
         });
         
-        fCylinder(context, id + "cylinderCenter", {
-                "topCenter" : vector(octagonLength + (octagonLength / sqrt(2)), octagonLength + octagonLength / sqrt(2), baseHeight),
-                "bottomCenter" : vector(octagonLength + (octagonLength / sqrt(2)), octagonLength + octagonLength / sqrt(2), 0 * octagonLength),
-                "radius" : 5 * millimeter
-        });
+        if (baseHeight > 5 * millimeter) {
+            fCylinder(context, id + "cylinderCenter", {
+                    "topCenter" : vector(octagonLength + (octagonLength / sqrt(2)), octagonLength + octagonLength / sqrt(2), baseHeight),
+                    "bottomCenter" : vector(octagonLength + (octagonLength / sqrt(2)), octagonLength + octagonLength / sqrt(2), baseHeight - (5 * millimeter)),
+                    "radius" : 5 * millimeter
+            });
+        } else {
+            fCylinder(context, id + "cylinderCenter", {
+                    "topCenter" : vector(octagonLength + (octagonLength / sqrt(2)), octagonLength + octagonLength / sqrt(2), baseHeight),
+                    "bottomCenter" : vector(octagonLength + (octagonLength / sqrt(2)), octagonLength + octagonLength / sqrt(2), 0 * millimeter),
+                    "radius" : 5 * millimeter
+            });
+        }
         
         opBoolean(context, id + "booleanCenter", {
                 "tools" : qCreatedBy(id + "cylinderCenter", EntityType.BODY),
-                "targets" : qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY),
+                "targets" : qCreatedBy(id + "cuboidCenter", EntityType.BODY),
                 "operationType" : BooleanOperationType.SUBTRACTION
         });
         
@@ -314,12 +291,18 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                 "depth" : baseHeight
         });
         
-        opBoolean(context, id + "boolean1", {
-                "tools" : qUnion([qCreatedBy(id + "extrudeCorner", EntityType.BODY), qCreatedBy(id + "booleanCenter", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY)]),
-                "targets" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
-                "operationType" : BooleanOperationType.SUBTRACTION,
-                "keepTools" : true
-        });
+        // need to boolean union the corners, center, and main structure
+        // then need to linear pattern all of that
+        // lastly, boolean union linear pattern together
+        
+        // these haven't worked yet... :(
+        
+        // opBoolean(context, id + "boolean1", {
+        //         "tools" : qUnion([qCreatedBy(id + "extrudeCorner", EntityType.BODY), qCreatedBy(id + "booleanCenter", EntityType.BODY), qCreatedBy(id + "booleanCenter", EntityType.BODY)]),
+        //         "targets" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
+        //         "operationType" : BooleanOperationType.SUBTRACTION,
+        //         "keepTools" : true
+        // });
         
         // opBoolean(context, id + "boolean2", {
         //         "tools" : qUnion([qCreatedBy(id + "boolean1", EntityType.BODY), qCreatedBy(id + "extrudeCorner", EntityType.BODY), qCreatedBy(id + "booleanCenter", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY), qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
@@ -339,22 +322,27 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
         // opBoolean(context, id + "boolean1", {
         //         "tools" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleCenter", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
         //         "operationType" : BooleanOperationType.UNION
-        // });
+        // // });
         
-        // linearPattern(context, id + "linearPattern1", {
-        //         "entities" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSampleStraight", EntityType.BODY), qCreatedBy(id + "extrudeSampleDiagonals", EntityType.BODY)]),
-        //         "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
-        //         "distance" : sample,
-        //         "instanceCount" : roundedRepeatWidth,
-        //         "hasSecondDir" : true,
-        //         "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
-        //         "distanceTwo" : sample,
-        //         "instanceCountTwo" : roundedRepeatLength,
-        //         "oppositeDirectionTwo" : true,
-        //         "defaultScope" : true
-        // });
+        linearPattern(context, id + "linearPattern1", {
+                "entities" : qUnion([qCreatedBy(id + "booleanSample", EntityType.BODY), qCreatedBy(id + "extrudeSample", EntityType.BODY)]),
+                "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
+                "distance" : sample,
+                "instanceCount" : roundedRepeatWidth,
+                "hasSecondDir" : true,
+                "directionTwo" : qCreatedBy(newId() + "Front", EntityType.FACE),
+                "distanceTwo" : sample,
+                "instanceCountTwo" : roundedRepeatLength,
+                "oppositeDirectionTwo" : true,
+                "defaultScope" : true
+        });
         
-        // creates the excess part, finished
+        opBoolean(context, id + "boolean1", {
+                "tools" : qUnion([qCreatedBy(id + "linearPattern1", EntityType.BODY), qCreatedBy(id + "extrudeSample", EntityType.BODY)]),
+                "operationType" : BooleanOperationType.UNION
+        });
+        
+        // creates the excess, finished
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
                 "sketchPlane" : XY_PLANE
             });
@@ -397,4 +385,8 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
             skSolve(excessSketch);
 
         // TODO: add in circular center, delete sketches, boolean everything
+        // opBoolean(context, id + "boolean1", {
+        //         "tools" : qEverything(EntityType.BODY),
+        //         "operationType" : BooleanOperationType.UNION
+        // });
     });
