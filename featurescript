@@ -271,23 +271,9 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                 "depth" : baseHeight
         });
         
-        // boolean sample structure
-        opBoolean(context, id + "booleanSample", {
-                "tools" : qUnion([qCreatedBy(id + "extrudeSample", EntityType.BODY), qCreatedBy(id + "extrudeCorner", EntityType.BODY), qCreatedBy(id + "cuboidCenter", EntityType.BODY)]),
-                "operationType" : BooleanOperationType.UNION
-        });
-        
-        // need to boolean union the corners, center, and main structure
-        // then need to linear pattern all of that
-        // lastly, boolean union linear pattern together
-        
-        // these don't work yet... :( hehe gone
-        // yes i deleted them why?
-        // IF I CANT SEE THE PROBLEM IT DONT EXIST
-        
         // creates full structure
         linearPattern(context, id + "linearPattern1", {
-                "entities" : qUnion([qCreatedBy(id + "extrudeSample", EntityType.BODY), qCreatedBy(id + "extrudeCorner", EntityType.BODY), qCreatedBy(id + "cuboidCenter", EntityType.BODY)]),
+                "entities" : qAllModifiableSolidBodiesNoMesh(),
                 "directionOne" : qCreatedBy(newId() + "Right", EntityType.FACE),
                 "distance" : sample,
                 "instanceCount" : roundedRepeatWidth,
@@ -299,12 +285,7 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
                 "defaultScope" : true
         });
         
-        opBoolean(context, id + "booleanFull", {
-                "tools" : qUnion([qCreatedBy(id + "linearPattern1", EntityType.BODY), qCreatedBy(id + "extrudeSample", EntityType.BODY), qCreatedBy(id + "extrudeCorner", EntityType.BODY), qCreatedBy(id + "cuboidCenter", EntityType.BODY)]),
-                "operationType" : BooleanOperationType.UNION
-        });
-        
-        // creates the excess, finished
+        // creates excess material
         var excessSketch = newSketchOnPlane(context, id + "excessSketch", {
                 "sketchPlane" : XY_PLANE
             });
@@ -345,12 +326,15 @@ export const octBase = defineFeature(function(context is Context, id is Id, defi
             }
             
             skSolve(excessSketch);
-
-        // // TODO: delete sketches
         
+        // creates one object
         opBoolean(context, id + "booleanAll", {
                 "tools" : qAllModifiableSolidBodiesNoMesh(),
                 "operationType" : BooleanOperationType.UNION
         });
+        
+        // cleans up workspace
+        opDeleteBodies(context, id + "deleteBodiesAll", {
+                "entities" : qSketchFilter(qEverything(EntityType.BODY), SketchObject.YES)
+        });
     });
-
